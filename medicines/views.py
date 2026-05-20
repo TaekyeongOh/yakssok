@@ -1,12 +1,15 @@
 import json
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.templatetags.static import static
 
 from .ddi import find_ddi_warnings
 from .models import UserMedicine
 from .utils import sort_medicines_by_next_intake
+
+from django.shortcuts import render
+from .utils import extract_medicines_from_prescription
 
 SORT_MANUFACTURED = 'manufactured'
 SORT_REMAINING = 'remaining'
@@ -106,3 +109,29 @@ def medicine_detail_view(request, pk):
         'nav_active': 'medicines',
     }
     return render(request, 'medicines/medicine_detail.html', context)
+
+def prescription_upload(request):
+    if request.method == "POST":
+        image_file = request.FILES.get("prescription_image")
+
+        result = extract_medicines_from_prescription(image_file)
+
+        request.session["ocr_result"] = result
+
+        return redirect("prescription_result")
+
+    return render(request, "medicines/prescription_upload.html", {
+        "nav_active": "scan",
+    })
+
+
+def prescription_result(request):
+    result = request.session.get("ocr_result")
+
+    if not result:
+        return redirect("prescription_upload")
+
+    return render(request, "medicines/prescription_result.html", {
+        "medicines": result["medicines"],
+        "nav_active": "scan",
+    })

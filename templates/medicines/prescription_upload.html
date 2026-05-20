@@ -1,0 +1,149 @@
+{% extends 'medicines/base_app.html' %} {% block content %}
+<div class="scan-page">
+  <section class="scan-modal">
+    <h2 class="scan-title">약물을 등록하시나요?</h2>
+
+    <div id="selectBox" class="scan-actions">
+      <button
+        type="button"
+        class="scan-action scan-action-large"
+        onclick="openWebcam()"
+      >
+        <span class="scan-icon">📷</span>
+        <strong>직접 촬영하기</strong>
+      </button>
+
+      <div class="scan-action-row">
+        <button type="button" class="scan-action" onclick="openFileUpload()">
+          <span class="scan-icon">🖼️</span>
+          <strong>사진으로<br />등록하기</strong>
+        </button>
+
+        <a href="#" class="scan-action">
+          <span class="scan-icon">🔍</span>
+          <strong>검색으로<br />등록하기</strong>
+        </a>
+      </div>
+    </div>
+
+    <div id="cameraBox" hidden>
+      <video
+        id="video"
+        autoplay
+        playsinline
+        style="width: 100%; border-radius: 18px; background: #000"
+      ></video>
+
+      <button
+        type="button"
+        class="scan-action scan-action-large"
+        onclick="takePhoto()"
+      >
+        <span class="scan-icon">📸</span>
+        <strong>촬영하기</strong>
+      </button>
+
+      <button type="button" class="scan-close" onclick="closeWebcam()">
+        ×
+      </button>
+    </div>
+
+    <a href="{% url 'home' %}" class="scan-close" id="mainClose">×</a>
+  </section>
+
+  <form id="uploadForm" method="post" enctype="multipart/form-data" hidden>
+    {% csrf_token %}
+    <input
+      id="fileInput"
+      type="file"
+      name="prescription_image"
+      accept="image/*"
+    />
+  </form>
+
+  <canvas id="canvas" hidden></canvas>
+</div>
+
+<script>
+  let stream = null;
+
+  function openFileUpload() {
+    document.getElementById("fileInput").click();
+  }
+
+  document.getElementById("fileInput").addEventListener("change", function () {
+    if (this.files.length > 0) {
+      document.getElementById("uploadForm").submit();
+    }
+  });
+
+  async function openWebcam() {
+    const selectBox = document.getElementById("selectBox");
+    const cameraBox = document.getElementById("cameraBox");
+    const mainClose = document.getElementById("mainClose");
+    const video = document.getElementById("video");
+
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: false,
+      });
+
+      video.srcObject = stream;
+
+      selectBox.hidden = true;
+      mainClose.hidden = true;
+      cameraBox.hidden = false;
+    } catch (error) {
+      alert("카메라를 사용할 수 없습니다. 브라우저 권한을 확인해주세요.");
+      console.error(error);
+    }
+  }
+
+  function takePhoto() {
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const context = canvas.getContext("2d");
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    canvas.toBlob(
+      function (blob) {
+        const file = new File([blob], "prescription.jpg", {
+          type: "image/jpeg",
+        });
+
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+
+        const fileInput = document.getElementById("fileInput");
+        fileInput.files = dataTransfer.files;
+
+        stopWebcam();
+
+        document.getElementById("uploadForm").submit();
+      },
+      "image/jpeg",
+      0.9,
+    );
+  }
+
+  function closeWebcam() {
+    stopWebcam();
+
+    document.getElementById("cameraBox").hidden = true;
+    document.getElementById("selectBox").hidden = false;
+    document.getElementById("mainClose").hidden = false;
+  }
+
+  function stopWebcam() {
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      stream = null;
+    }
+  }
+</script>
+{% endblock %}

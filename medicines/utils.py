@@ -3,6 +3,12 @@ from datetime import datetime, timedelta
 
 from django.utils import timezone
 
+import os
+import json
+from PIL import Image
+from google import genai
+from google.genai import types
+
 TIME_PATTERN = re.compile(r'(\d{1,2}):(\d{2})')
 
 
@@ -73,3 +79,53 @@ def sort_medicines_by_next_intake(medicines, now=None):
         })
     items.sort(key=lambda item: item['next_minutes'])
     return items
+
+
+def extract_medicines_from_prescription(image_file):
+    api_key = os.getenv("GEMINI_API_KEY")
+
+    if not api_key:
+        raise ValueError("GEMINI_API_KEY가 .env에 없습니다.")
+
+    client = genai.Client(api_key=api_key)
+
+    image = Image.open(image_file)
+
+    prompt = """
+너는 처방전 이미지에서 약 이름과 약물 사진 정보를 추출하는 도우미야.
+
+이미지에서 확인 가능한 약 이름만 추출해.
+복용법, 용량, 일수, 병원명, 환자명은 제외해.
+
+약 이름 근처에 약물 사진 또는 알약 이미지가 보이면 has_image를 true로 표시해.
+약물 사진의 위치를 알 수 있으면 bounding_box를 추정해.
+bounding_box는 이미지 전체 기준으로 0~1000 사이 정규화 좌표 [x_min, y_min, x_max, y_max]로 답해.
+
+반드시 아래 JSON 형식으로만 답해.
+
+{
+  "medicines": [
+    {
+      "name": "약 이름",
+      "raw_text": "이미지에서 보이는 원문",
+      "confidence": "high/medium/low",
+      "has_image": true,
+      "image_description": "보이는 약물 사진 설명",
+      "bounding_box": [0, 0, 0, 0]
+    }
+  ]
+}
+
+약 이름을 확실히 모르겠으면 confidence를 low로 표시해.
+약물 사진이 없거나 위치를 알 수 없으면 has_image는 false, bounding_box는 null로 표시해.
+"""
+
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=[prompt, image],
+        config=types.GenerateContentConfig(
+            response_mime_type="application/json"
+        )
+    )
+
+    return json.loads(response.text)

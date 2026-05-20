@@ -1,0 +1,14 @@
+<h2>약물 정보를 확인할게요</h2>
+
+{% for med in medicines %}
+<div class="medicine-card">
+  <strong>{{ med.name }}</strong>
+  <p>{{ med.raw_text }}</p>
+  <p>신뢰도: {{ med.confidence }}</p>
+
+  <button>삭제하기</button>
+  <button>수정하기</button>
+</div>
+{% endfor %}
+
+<button>약 추가하기</button>
