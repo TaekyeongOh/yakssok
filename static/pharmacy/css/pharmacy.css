@@ -174,11 +174,23 @@
 }
 
 .pharmacy-card-address {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+
   margin: 0.45rem 0 0.9rem;
   font-size: 0.95rem;
   line-height: 1.45;
   font-weight: 700;
   color: #333;
+}
+
+.pharmacy-card-pin {
+  width: 1rem;
+  height: 1rem;
+  color: #111;
+  stroke-width: 3;
+  flex-shrink: 0;
 }
 
 .pharmacy-card-actions {
@@ -227,14 +239,15 @@
   z-index: 40;
   width: auto;
   margin: 0;
-  padding: 1rem;
+  padding: 1rem 1.1rem;
   background: #fff;
   border-radius: 14px;
   box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.12);
-  display: grid;
-  grid-template-columns: 4.5rem 1fr;
-  gap: 1rem;
-  align-items: center;
+  display: block;
+}
+
+.pharmacy-bottom-card[hidden] {
+  display: none !important;
 }
 
 .bottom-card-close {
@@ -251,16 +264,6 @@
   cursor: pointer;
 }
 
-.bottom-card-thumb-wrap {
-  flex-shrink: 0;
-  width: 4.5rem;
-  height: 4.5rem;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #dff8fb;
-  border: 1px solid #c5e8e2;
-}
-
 .bottom-card-img {
   width: 100%;
   height: 100%;
@@ -274,35 +277,62 @@
 }
 
 .bottom-card-body {
-  flex: 1;
-  min-width: 0;
   padding-right: 1.5rem;
 }
 
 .bottom-card-name {
-  margin: 0 0 0.25rem;
-  font-size: 1.1rem;
+  margin: 0 0 0.2rem;
+  font-size: 1.25rem;
   font-weight: 900;
+  color: #111;
 }
 
-.bottom-card-meta,
+.bottom-card-meta {
+  display: inline;
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #999;
+}
+
+#bottom-card-status {
+  color: #14bddc;
+}
+
+#bottom-card-close-time::before {
+  content: " | ";
+  color: #999;
+}
+
 .bottom-card-address {
-  margin: 0.2rem 0;
-  font-size: 0.9rem;
+  margin: 0.55rem 0 0;
+  font-size: 0.95rem;
   font-weight: 700;
-  color: #5a6f6c;
+  color: #333;
+  line-height: 1.35;
+  margin: 0;
 }
 
-.bottom-card-address {
-  color: #1a2e2b;
-  line-height: 1.35;
+.bottom-card-address-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.55rem 0 0;
+}
+
+.bottom-card-pin {
+  width: 1rem;
+  height: 1rem;
+  color: #111;
+  stroke-width: 3;
+  flex-shrink: 0;
 }
 
 .bottom-card-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.6rem;
-  margin-top: 0.75rem;
+  margin-top: 0.8rem;
 }
 
 .pharmacy-tabs {

@@ -7,14 +7,21 @@
 {% block content %}
 <section class="camera-page">
   <div class="camera-frame">
-    <button type="button" class="camera-back" onclick="history.back()">‹</button>
-
     <video id="cameraPreview" autoplay playsinline class="camera-video"></video>
 
-    <div class="scan-corner top-left"></div>
-    <div class="scan-corner top-right"></div>
-    <div class="scan-corner bottom-left"></div>
-    <div class="scan-corner bottom-right"></div>
+    <div class="scan-focus-area">
+      <video
+        id="cameraFocusPreview"
+        autoplay
+        playsinline
+        class="scan-focus-video"
+      ></video>
+
+      <div class="scan-corner top-left"></div>
+      <div class="scan-corner top-right"></div>
+      <div class="scan-corner bottom-left"></div>
+      <div class="scan-corner bottom-right"></div>
+    </div>
 
     <button type="button" class="camera-shot-btn" id="captureBtn">
       <i data-lucide="camera"></i>
@@ -31,6 +38,7 @@
     if (window.lucide) lucide.createIcons();
 
     const video = document.getElementById("cameraPreview");
+    const focusVideo = document.getElementById("cameraFocusPreview");
     const canvas = document.getElementById("cameraCanvas");
     const captureBtn = document.getElementById("captureBtn");
 
@@ -41,23 +49,27 @@
       });
 
       video.srcObject = stream;
+      focusVideo.srcObject = stream;
     } catch (error) {
       alert("카메라를 실행할 수 없습니다.");
       return;
     }
 
     captureBtn.addEventListener("click", function () {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+      canvas.width = focusVideo.videoWidth;
+      canvas.height = focusVideo.videoHeight;
 
       const context = canvas.getContext("2d");
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      context.drawImage(focusVideo, 0, 0, canvas.width, canvas.height);
 
       canvas.toBlob(function (blob) {
         const reader = new FileReader();
 
         reader.onload = function (event) {
-          sessionStorage.setItem("selectedPrescriptionImage", event.target.result);
+          sessionStorage.setItem(
+            "selectedPrescriptionImage",
+            event.target.result
+          );
           window.location.href = "{% url 'prescription_preview' %}";
         };
 

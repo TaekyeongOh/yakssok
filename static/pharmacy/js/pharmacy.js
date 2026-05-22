@@ -35,6 +35,8 @@
   var markers = [];
   var userMarker = null;
   var selectedId = null;
+  var pharmacyMarkerImage = null;
+  var userMarkerImage = null;
 
   if (bottomCard) {
     bottomCard.hidden = true;
@@ -179,11 +181,23 @@
 
     var LatLng = kakao.maps.LatLng;
 
+    if (!pharmacyMarkerImage) {
+      pharmacyMarkerImage = new kakao.maps.MarkerImage(
+        "/static/pharmacy/img/color.png",
+        new kakao.maps.Size(34, 34),
+        {
+          offset: new kakao.maps.Point(17, 17),
+        },
+      );
+    }
+
     items.forEach(function (p) {
       var pos = new LatLng(p.lat, p.lng);
+
       var marker = new kakao.maps.Marker({
         position: pos,
         map: map,
+        image: pharmacyMarkerImage,
       });
 
       kakao.maps.event.addListener(marker, "click", function () {
@@ -225,8 +239,15 @@
       li.querySelector(".pharmacy-close-time").textContent = p.closing_time
         ? p.closing_time + " 종료"
         : "";
-      li.querySelector(".pharmacy-card-address").textContent =
-        "● " + (p.address || "주소 정보 없음");
+      li.querySelector(".pharmacy-card-address").innerHTML =
+        `
+          <i data-lucide="map-pin" class="pharmacy-card-pin"></i>
+          <span>${p.address || "주소 정보 없음"}</span>
+        `;
+
+      if (window.lucide) {
+        lucide.createIcons();
+      }
 
       var routeA = li.querySelector(".route-link");
       routeA.href = kakaoDirectionsUrl(p.name || "약국", p.lat, p.lng);
@@ -345,6 +366,7 @@
       userMarker = new kakao.maps.Marker({
         position: center,
         map: map,
+        image: userMarkerImage,
       });
     } else {
       userMarker.setPosition(center);
