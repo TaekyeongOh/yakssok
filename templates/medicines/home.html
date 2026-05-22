@@ -38,23 +38,28 @@
   {% if has_medicines %}
     <div class="today-card-scroll">
       {% for item in medicine_items %}
-      <article class="today-medicine-card">
+      <div class="today-card-item">
         <p class="today-time">오전 09:00 | 식후</p>
 
-        <div class="today-medicine-info">
-          <div class="today-thumb"></div>
+        <article class="today-medicine-card">
+          <div class="today-medicine-info">
+            <div class="today-thumb"></div>
 
-          <div class="today-text">
-            <span class="today-badge">처방약</span>
-            <strong>{{ item.medicine.medicine_name }}</strong>
+            <div class="today-text">
+              <span class="today-badge">처방약</span>
+              <strong>{{ item.medicine.medicine_name }}</strong>
+            </div>
           </div>
-        </div>
 
-        <button type="button" class="today-check-btn">
-          <span class="today-check-icon"></span>
-          <span>복용 후 여기를 눌러주세요</span>
-        </button>
-      </article>
+          <button type="button" class="today-check-btn medicine-complete-btn">
+            <img
+              src="{% static 'medicines/img/before.png' %}"
+              alt="복용 전"
+              class="medicine-state-image"
+            />
+          </button>
+        </article>
+      </div>
       {% endfor %}
     </div>
 
@@ -119,17 +124,50 @@
     const bannerScroll = document.querySelector(".banner-scroll");
     const dots = document.querySelectorAll(".banner-dots span");
 
-    if (!bannerScroll || dots.length === 0) return;
+    if (bannerScroll && dots.length > 0) {
+      bannerScroll.addEventListener("scroll", function () {
+        const index = Math.round(
+          bannerScroll.scrollLeft / bannerScroll.clientWidth
+        );
 
-    bannerScroll.addEventListener("scroll", function () {
-      const index = Math.round(
-        bannerScroll.scrollLeft / bannerScroll.clientWidth
-      );
+        dots.forEach(function (dot, i) {
+          dot.classList.toggle("active", i === index);
+        });
+      });
+    }
 
-      dots.forEach(function (dot, i) {
-        dot.classList.toggle("active", i === index);
+    const medicineButtons = document.querySelectorAll(".medicine-complete-btn");
+    const allTakenBtn = document.querySelector(".all-taken-btn");
+
+    medicineButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        const image = button.querySelector(".medicine-state-image");
+        const isCompleted = button.classList.contains("completed");
+
+        if (isCompleted) {
+          button.classList.remove("completed");
+          image.src = "{% static 'medicines/img/before.png' %}";
+        } else {
+          button.classList.add("completed");
+          image.src = "{% static 'medicines/img/after.png' %}";
+        }
+
+        checkAllCompleted();
       });
     });
+
+    function checkAllCompleted() {
+      const total = medicineButtons.length;
+      const completed = document.querySelectorAll(
+        ".medicine-complete-btn.completed"
+      ).length;
+
+      if (total > 0 && total === completed) {
+        allTakenBtn.classList.add("active");
+      } else {
+        allTakenBtn.classList.remove("active");
+      }
+    }
   });
 </script>
 {% endblock %}

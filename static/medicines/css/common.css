@@ -5,7 +5,7 @@
   --color-primary-dark: #1f9a8a;
   --color-primary-light: #e8f8f5;
   --color-sky: #7ec8e3;
-  --color-bg: #f0faf9;
+  --color-bg: #ffffff;
   --color-card: #ffffff;
   --color-text: #1a2e2b;
   --color-text-muted: #5a6f6c;
@@ -322,12 +322,33 @@ body.app-page {
 
 .camera-frame {
   position: relative;
+  width: 100%;
   height: 100%;
-  background: #555;
+  background: #000;
   overflow: hidden;
 }
 
 .camera-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(4px) brightness(0.65);
+  transform: scale(1.05);
+}
+
+.scan-focus-area {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  width: 82%;
+  aspect-ratio: 4 / 3;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.scan-focus-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -337,7 +358,7 @@ body.app-page {
   position: absolute;
   top: 1.5rem;
   left: 1.2rem;
-  z-index: 3;
+  z-index: 10;
   width: 3.2rem;
   height: 3.2rem;
   border: none;
@@ -349,50 +370,46 @@ body.app-page {
 
 .scan-corner {
   position: absolute;
-  z-index: 3;
-  width: 4.2rem;
-  height: 4.2rem;
+  z-index: 5;
+  width: 3rem;
+  height: 3rem;
   border-color: #22c7de;
   border-style: solid;
 }
 
 .scan-corner.top-left {
-  top: 8rem;
-  left: 1.3rem;
-  border-width: 0.45rem 0 0 0.45rem;
-  border-radius: 8px 0 0 0;
+  top: 0;
+  left: 0;
+  border-width: 0.4rem 0 0 0.4rem;
 }
 
 .scan-corner.top-right {
-  top: 8rem;
-  right: 1.3rem;
-  border-width: 0.45rem 0.45rem 0 0;
-  border-radius: 0 8px 0 0;
+  top: 0;
+  right: 0;
+  border-width: 0.4rem 0.4rem 0 0;
 }
 
 .scan-corner.bottom-left {
-  bottom: 8rem;
-  left: 1.3rem;
-  border-width: 0 0 0.45rem 0.45rem;
-  border-radius: 0 0 0 8px;
+  bottom: 0;
+  left: 0;
+  border-width: 0 0 0.4rem 0.4rem;
 }
 
 .scan-corner.bottom-right {
-  bottom: 8rem;
-  right: 1.3rem;
-  border-width: 0 0.45rem 0.45rem 0;
-  border-radius: 0 0 8px 0;
+  bottom: 0;
+  right: 0;
+  border-width: 0 0.4rem 0.4rem 0;
 }
 
 .camera-shot-btn {
   position: absolute;
   left: 50%;
-  bottom: 3rem;
+  bottom: 2.5rem;
   transform: translateX(-50%);
-  z-index: 3;
-  width: 4.8rem;
-  height: 4.8rem;
-  border: 0.35rem solid rgba(255, 255, 255, 0.25);
+  z-index: 10;
+  width: 5.2rem;
+  height: 5.2rem;
+  border: 0.35rem solid rgba(255, 255, 255, 0.22);
   border-radius: 50%;
   background: linear-gradient(135deg, #29c7df, #25cf8d);
   color: #fff;
@@ -493,14 +510,11 @@ body.app-page {
   line-height: 1.5;
 }
 
-.scan-logo {
+.scan-loading-logo {
   width: 7rem;
   height: 7rem;
-  margin: 0 auto 1.5rem;
-  border-radius: 32px;
-  background: linear-gradient(135deg, #25cf8d, #21bdd3);
-  transform: rotate(45deg);
-  opacity: 0.95;
+  object-fit: contain;
+  margin-bottom: 1.5rem;
 }
 
 /* OCR 결과 */

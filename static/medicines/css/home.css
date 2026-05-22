@@ -99,11 +99,6 @@
   display: none;
 }
 
-.today-medicine-card {
-  flex: 0 0 17.3rem;
-  scroll-snap-align: start;
-}
-
 .today-time {
   margin: 0 0 0.45rem;
   color: #08acd9;
@@ -113,12 +108,10 @@
 }
 
 .today-medicine-info {
-  height: 6.2rem;
-  padding: 0.75rem;
-  border-radius: 10px 10px 0 0;
-  background: #eefcff;
+  height: 4.9rem;
+  padding: 0.65rem 0.8rem 0.45rem;
   display: flex;
-  gap: 0.75rem;
+  gap: 0.65rem;
   align-items: flex-start;
 }
 
@@ -145,28 +138,14 @@
 }
 
 .today-text strong {
-  display: block;
-  font-size: 1rem;
+  font-size: 0.95rem;
   line-height: 1.3;
-  font-weight: 900;
-  color: #444;
-  word-break: keep-all;
-}
-
-.today-check-btn {
-  width: 100%;
-  height: 7rem;
-  border: none;
-  border-radius: 0 0 10px 10px;
-  background: #f9f9f9;
-  color: #9b9b9b;
-  font-size: 0.9rem;
-  font-weight: 800;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;  /* keep-all → break-all */
 }
 
 .today-check-icon {
@@ -288,4 +267,61 @@
     width: 6.8rem;
     height: 6.8rem;
   }
+}
+
+.medicine-complete-btn {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.all-taken-btn.active {
+  background: #28c7e3;
+  color: white;
+}
+
+.today-medicine-card {
+  background: #edf9fb;
+  border-radius: 1.25rem;
+
+  overflow: visible;
+
+  padding-bottom: 0.55rem;
+}
+
+.today-check-btn {
+  width: calc(100% - 1.6rem);
+  margin: 0.35rem auto 0;
+  padding: 0.15rem;
+  border: none;
+  background: transparent;
+  display: block;
+}
+
+.medicine-state-image {
+  width: 100%;
+  height: 7rem;
+  object-fit: contain;
+  display: block;
+  border-radius: 0.7rem;
+}
+
+.today-thumb {
+  width: 3.8rem;
+  height: 3.8rem;
+}
+
+.all-taken-btn {
+  margin-top: 1rem;
+  height: 4.2rem;
+  border-radius: 999px;
+}
+
+.home-banner-section {
+  margin-top: 1.5rem;
+}
+
+.today-card-item {
+  flex: 0 0 17rem;
 }
