@@ -1,5 +1,8 @@
 from datetime import date
 
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+
 from django.contrib.auth import login, logout
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
@@ -159,3 +162,8 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')

@@ -10,24 +10,12 @@
 {% block header %}
 <header class="shared-page-header">
   <a href="{% url 'home' %}" class="shared-page-brand" aria-label="홈으로 이동">
-    <img
-      src="{% static 'medicines/img/logo.svg' %}"
-      alt=""
-      class="shared-page-logo"
-    />
-    <img
-      src="{% static 'medicines/img/yakssok.svg' %}"
-      alt="약쏙"
-      class="shared-page-logo-text"
-    />
+    <img src="{% static 'medicines/img/logo.svg' %}" alt="" class="shared-page-logo" />
+    <img src="{% static 'medicines/img/yakssok.svg' %}" alt="약쏙" class="shared-page-logo-text" />
   </a>
 
-  <a href="{% url 'home' %}" class="shared-page-exit" aria-label="나가기">
-    <img
-      src="{% static 'medicines/img/log-out.svg' %}"
-      alt=""
-      class="shared-page-exit-icon"
-    />
+  <a href="{% url 'logout' %}" class="shared-page-exit" aria-label="로그아웃">
+    <img src="{% static 'medicines/img/log-out.svg' %}" alt="" class="shared-page-exit-icon" />
   </a>
 </header>
 {% endblock %}
@@ -44,38 +32,34 @@
   </div>
 
   {% if has_medicines %}
-    <div class="today-card-scroll">
-      {% for item in medicine_items %}
-      <div class="today-card-item">
-        <p class="today-time">오전 09:00 | 식후</p>
+  <div class="today-card-scroll">
+    {% for item in medicine_items %}
+    <div class="today-card-item">
+      <p class="today-time">오전 09:00 | 식후</p>
 
-        <article class="today-medicine-card">
-          <div class="today-medicine-info">
-            <div class="today-thumb"></div>
+      <article class="today-medicine-card">
+        <div class="today-medicine-info">
+          <div class="today-thumb"></div>
 
-            <div class="today-text">
-              <span class="today-badge">처방약</span>
-              <strong>{{ item.medicine.medicine_name }}</strong>
-            </div>
+          <div class="today-text">
+            <span class="today-badge">처방약</span>
+            <strong>{{ item.medicine.medicine_name }}</strong>
           </div>
+        </div>
 
-          <button type="button" class="today-check-btn medicine-complete-btn">
-            <img
-              src="{% static 'medicines/img/before.png' %}"
-              alt="복용 전"
-              class="medicine-state-image"
-            />
-          </button>
-        </article>
-      </div>
-      {% endfor %}
+        <button type="button" class="today-check-btn medicine-complete-btn">
+          <img src="{% static 'medicines/img/before.png' %}" alt="복용 전" class="medicine-state-image" />
+        </button>
+      </article>
     </div>
+    {% endfor %}
+  </div>
 
-    <button type="button" class="all-taken-btn">모두 먹었어요</button>
+  <button type="button" class="all-taken-btn">모두 먹었어요</button>
   {% else %}
-    <div class="empty-message">
-      현재 등록된 약이 없습니다.
-    </div>
+  <div class="empty-message">
+    현재 등록된 약이 없습니다.
+  </div>
   {% endif %}
 </section>
 
@@ -86,11 +70,7 @@
         <strong>내 약, 얼마나 남았을까?</strong>
         <span>약 목록 바로가기 &gt;</span>
       </div>
-      <img
-        src="{% static 'medicines/img/medicine.png' %}"
-        alt=""
-        class="banner-image"
-      />
+      <img src="{% static 'medicines/img/medicine.png' %}" alt="" class="banner-image" />
     </a>
 
     <a href="{% url 'prescription_upload' %}" class="home-banner">
@@ -98,11 +78,7 @@
         <strong>새로운 약이 추가되었나요?</strong>
         <span>약 추가 바로가기 &gt;</span>
       </div>
-      <img
-        src="{% static 'medicines/img/pharmacy.png' %}"
-        alt=""
-        class="banner-image"
-      />
+      <img src="{% static 'medicines/img/pharmacy.png' %}" alt="" class="banner-image" />
     </a>
 
     <a href="{% url 'pharmacy_map' %}" class="home-banner">
@@ -110,11 +86,7 @@
         <strong>부작용이 걱정되나요?</strong>
         <span>약국 전화 바로가기 &gt;</span>
       </div>
-      <img
-        src="{% static 'medicines/img/call.png' %}"
-        alt=""
-        class="banner-image"
-      />
+      <img src="{% static 'medicines/img/call.png' %}" alt="" class="banner-image" />
     </a>
   </div>
 
