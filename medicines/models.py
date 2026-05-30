@@ -76,6 +76,14 @@ class UserMedicine(models.Model):
     def image_static_path(self):
         return self.image or self.DEFAULT_IMAGE
     
+    @property
+    def remaining_percent(self):
+        """남은 비율 퍼센트, 0~100."""
+        if not self.total_quantity:
+            return 0
+        return int((self.remaining_quantity / self.total_quantity) * 100)
+      
+    
 class IntakeLog(models.Model):
     STATUS_CHOICES = [
         ("taken", "복용함"),
@@ -91,3 +99,4 @@ class IntakeLog(models.Model):
 
     class Meta:
         unique_together = ("user", "medicine", "intake_date", "intake_time")
+   

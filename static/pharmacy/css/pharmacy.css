@@ -71,6 +71,7 @@
   padding: 0 1.25rem 0.75rem;
   background: #fff;
   border-bottom: none;
+  position: relative;
 }
 
 .pharmacy-tab {
@@ -91,6 +92,19 @@
   color: #fff;
 }
 
+.pharmacy-sort {
+  margin-left: auto;
+  min-height: 2.35rem;
+  padding: 0 0.2rem;
+  border: none;
+  background: transparent;
+  color: #999;
+  font-size: 1rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+/* ── 지도 뷰 ── */
 .pharmacy-view-map {
   position: relative;
   flex: 1 1 auto;
@@ -129,6 +143,7 @@
   line-height: 1;
 }
 
+/* ── 목록 뷰 ── */
 .pharmacy-view-list {
   flex: 1 1 auto;
   min-height: 0;
@@ -177,7 +192,6 @@
   display: flex;
   align-items: center;
   gap: 0.35rem;
-
   margin: 0.45rem 0 0.9rem;
   font-size: 0.95rem;
   line-height: 1.45;
@@ -199,6 +213,7 @@
   gap: 0.6rem;
 }
 
+/* ── 공통 버튼 ── */
 .btn-pharmacy {
   display: flex;
   align-items: center;
@@ -231,18 +246,18 @@
   pointer-events: none;
 }
 
+/* ── 하단 카드 ── */
 .pharmacy-bottom-card {
   position: absolute;
-  left: 1rem;
-  right: 1rem;
-  bottom: calc(var(--nav-height) + 0.75rem);
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
   z-index: 40;
-  width: auto;
   margin: 0;
-  padding: 1rem 1.1rem;
+  padding: 1rem 1.1rem 1.25rem;
   background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.12);
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.13);
   display: block;
 }
 
@@ -280,37 +295,35 @@
   padding-right: 1.5rem;
 }
 
-.bottom-card-name {
-  margin: 0 0 0.2rem;
-  font-size: 1.25rem;
-  font-weight: 900;
-  color: #111;
+.bottom-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.45rem;
 }
 
-.bottom-card-meta {
-  display: inline;
+.bottom-card-header .bottom-card-name {
   margin: 0;
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: #999;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 0.5rem;
 }
 
-#bottom-card-status {
-  color: #14bddc;
-}
-
-#bottom-card-close-time::before {
-  content: " | ";
-  color: #999;
+.bottom-card-distance {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #21bed4;
+  flex-shrink: 0;
 }
 
 .bottom-card-address {
-  margin: 0.55rem 0 0;
+  margin: 0;
   font-size: 0.95rem;
   font-weight: 700;
   color: #333;
   line-height: 1.35;
-  margin: 0;
 }
 
 .bottom-card-address-row {
@@ -335,18 +348,26 @@
   margin-top: 0.8rem;
 }
 
-.pharmacy-tabs {
-  position: relative;
+/* ── 목록 카드 헤더 (이름 + 거리) ── */
+.pharmacy-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
 }
 
-.pharmacy-sort {
-  margin-left: auto;
-  min-height: 2.35rem;
-  padding: 0 0.2rem;
-  border: none;
-  background: transparent;
-  color: #999;
-  font-size: 1rem;
-  font-weight: 900;
+.pharmacy-card-header .pharmacy-card-name {
+  margin: 0;
+  flex: 1;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 0.5rem;
+}
+
+.pharmacy-card-distance {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #21bed4;
+  flex-shrink: 0;
 }
