@@ -376,6 +376,7 @@ body.medication-reminder-page {
   
   .medication-reminder-page .reminder-time-group {
     position: relative;
+    margin: 24px;
     z-index: 2;
   }
   
@@ -420,7 +421,7 @@ body.medication-reminder-page {
       overflow-x: auto;
       overflow-y: hidden;
 
-      padding: 4px 8px 8px 15px;
+      padding: 4px 8px 8px px;
 
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
