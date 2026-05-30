@@ -90,9 +90,7 @@
   }
 
   function kakaoDirectionsUrl(name, lat, lng) {
-    return `https://map.kakao.com/link/to/${encodeURIComponent(
-      name,
-    )},${lat},${lng}`;
+    return "https://map.kakao.com/link/to/" + encodeURIComponent(name) + "," + lat + "," + lng;
   }
 
   function telHref(phone) {
@@ -110,12 +108,15 @@
     if (!bottomCard) return;
 
     bottomName.textContent = p.name || "약국";
-    bottomStatus.textContent = p.business_status || "정보 없음";
-    bottomCloseTime.textContent = p.closing_time
-      ? p.closing_time + " 종료"
-      : "";
-    bottomAddress.textContent = p.address || "주소 정보 없음";
 
+    var distEl = document.getElementById("bottom-card-distance");
+    if (distEl) {
+      distEl.textContent = p.distance_m != null
+        ? (p.distance_m >= 1000 ? (p.distance_m / 1000).toFixed(1) + "km" : p.distance_m + "m")
+        : "";
+    }
+
+    bottomAddress.textContent = p.address || "주소 정보 없음";
     bottomRoute.href = kakaoDirectionsUrl(p.name || "약국", p.lat, p.lng);
 
     if (p.phone) {
@@ -129,7 +130,6 @@
     }
 
     if (bottomImg) bottomImg.hidden = true;
-
     if (bottomPlaceholder) {
       bottomPlaceholder.hidden = false;
       bottomPlaceholder.textContent = "";
@@ -168,9 +168,7 @@
   }
 
   function clearPharmacyMarkers() {
-    markers.forEach(function (m) {
-      m.setMap(null);
-    });
+    markers.forEach(function (m) { m.setMap(null); });
     markers = [];
   }
 
@@ -185,15 +183,12 @@
       pharmacyMarkerImage = new kakao.maps.MarkerImage(
         "/static/pharmacy/img/color.png",
         new kakao.maps.Size(34, 34),
-        {
-          offset: new kakao.maps.Point(17, 17),
-        },
+        { offset: new kakao.maps.Point(17, 17) }
       );
     }
 
     items.forEach(function (p) {
       var pos = new LatLng(p.lat, p.lng);
-
       var marker = new kakao.maps.Marker({
         position: pos,
         map: map,
@@ -225,35 +220,36 @@
       li.className = "pharmacy-card";
 
       li.innerHTML =
-        '<h2 class="pharmacy-card-name"></h2>' +
-        '<p class="pharmacy-card-meta"><span class="pharmacy-open"></span> <span class="pharmacy-close-time"></span></p>' +
+        '<div class="pharmacy-card-header">' +
+          '<h2 class="pharmacy-card-name"></h2>' +
+          '<span class="pharmacy-card-distance"></span>' +
+        '</div>' +
         '<p class="pharmacy-card-address"></p>' +
         '<div class="pharmacy-card-actions">' +
-        '<a class="btn-pharmacy btn-pharmacy-outline route-link" target="_blank" rel="noopener noreferrer">길 찾기</a>' +
-        '<a class="btn-pharmacy btn-pharmacy-primary tel-link">전화하기</a>' +
+          '<a class="btn-pharmacy btn-pharmacy-outline route-link" target="_blank" rel="noopener noreferrer">길 찾기</a>' +
+          '<a class="btn-pharmacy btn-pharmacy-primary tel-link">전화하기</a>' +
         "</div>";
 
       li.querySelector(".pharmacy-card-name").textContent = p.name || "약국";
-      li.querySelector(".pharmacy-open").textContent =
-        p.business_status || "영업 정보 없음";
-      li.querySelector(".pharmacy-close-time").textContent = p.closing_time
-        ? p.closing_time + " 종료"
-        : "";
-      li.querySelector(".pharmacy-card-address").innerHTML =
-        `
-          <i data-lucide="map-pin" class="pharmacy-card-pin"></i>
-          <span>${p.address || "주소 정보 없음"}</span>
-        `;
 
-      if (window.lucide) {
-        lucide.createIcons();
+      var distEl = li.querySelector(".pharmacy-card-distance");
+      if (p.distance_m != null) {
+        distEl.textContent = p.distance_m >= 1000
+          ? (p.distance_m / 1000).toFixed(1) + "km"
+          : p.distance_m + "m";
       }
+
+      var addrEl = li.querySelector(".pharmacy-card-address");
+      addrEl.innerHTML =
+        '<i data-lucide="map-pin" class="pharmacy-card-pin"></i>' +
+        '<span>' + (p.address || "주소 정보 없음") + '</span>';
+
+      if (window.lucide) lucide.createIcons();
 
       var routeA = li.querySelector(".route-link");
       routeA.href = kakaoDirectionsUrl(p.name || "약국", p.lat, p.lng);
 
       var telA = li.querySelector(".tel-link");
-
       if (p.phone) {
         telA.href = telHref(p.phone);
       } else {
@@ -278,13 +274,8 @@
     renderList();
 
     if (selectedId) {
-      var stillExists = items.some(function (p) {
-        return p.id === selectedId;
-      });
-
-      if (!stillExists) {
-        closeBottomCard();
-      }
+      var stillExists = items.some(function (p) { return p.id === selectedId; });
+      if (!stillExists) closeBottomCard();
     }
   }
 
@@ -300,10 +291,7 @@
     if (which === "map") {
       viewMap.hidden = false;
       viewList.hidden = true;
-
-      if (map && map.relayout) {
-        map.relayout();
-      }
+      if (map && map.relayout) map.relayout();
     } else {
       viewMap.hidden = true;
       viewList.hidden = false;
@@ -316,23 +304,18 @@
 
     var url =
       apiNearby +
-      "?lat=" +
-      encodeURIComponent(lat) +
-      "&lng=" +
-      encodeURIComponent(lng) +
+      "?lat=" + encodeURIComponent(lat) +
+      "&lng=" + encodeURIComponent(lng) +
       "&radius=5000&size=15";
 
     return fetch(url, { credentials: "same-origin" })
       .then(function (r) {
-        return r.json().then(function (data) {
-          return { ok: r.ok, data: data };
-        });
+        return r.json().then(function (data) { return { ok: r.ok, data: data }; });
       })
       .then(function (res) {
         if (!res.ok || !res.data.ok) {
           throw new Error(res.data.error || "약국 정보를 가져오지 못했습니다.");
         }
-
         allItems = res.data.items || [];
         closeBottomCard();
         refreshMarkersAndList();
@@ -340,7 +323,6 @@
       })
       .catch(function (err) {
         setStatus(err.message || "오류가 발생했습니다.", true);
-
         allItems = [];
         closeBottomCard();
         refreshMarkersAndList();
@@ -354,20 +336,13 @@
     var center = new LatLng(lat, lng);
 
     if (!map) {
-      map = new kakao.maps.Map(mapEl, {
-        center: center,
-        level: 5,
-      });
+      map = new kakao.maps.Map(mapEl, { center: center, level: 5 });
     } else {
       map.setCenter(center);
     }
 
     if (!userMarker) {
-      userMarker = new kakao.maps.Marker({
-        position: center,
-        map: map,
-        image: userMarkerImage,
-      });
+      userMarker = new kakao.maps.Marker({ position: center, map: map, image: userMarkerImage });
     } else {
       userMarker.setPosition(center);
       userMarker.setMap(map);
@@ -392,40 +367,26 @@
     return new Promise(function (resolve, reject) {
       navigator.geolocation.getCurrentPosition(
         function (pos) {
-          resolve({
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-          });
+          resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude });
         },
         function (err) {
           var msg = "위치를 가져올 수 없습니다.";
-
-          if (err.code === 1) {
-            msg = "위치 권한이 거부되었습니다. 브라우저 설정에서 허용해주세요.";
-          }
-
+          if (err.code === 1) msg = "위치 권한이 거부되었습니다. 브라우저 설정에서 허용해주세요.";
           setStatus(msg, true);
           reject(err);
         },
-        {
-          enableHighAccuracy: true,
-          timeout: 15000,
-          maximumAge: 60000,
-        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
       );
     });
   }
 
+  /* ── 이벤트 바인딩 ── */
   root.querySelectorAll(".pharmacy-tab").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      switchTab(btn.dataset.tab);
-    });
+    btn.addEventListener("click", function () { switchTab(btn.dataset.tab); });
   });
 
   if (searchInput) {
-    searchInput.addEventListener("input", function () {
-      refreshMarkersAndList();
-    });
+    searchInput.addEventListener("input", function () { refreshMarkersAndList(); });
   }
 
   if (bottomClose) {
@@ -439,27 +400,18 @@
   if (btnMyLoc) {
     btnMyLoc.addEventListener("click", function () {
       requestLocation()
-        .then(function (coords) {
-          return applyPosition(coords.lat, coords.lng);
-        })
+        .then(function (coords) { return applyPosition(coords.lat, coords.lng); })
         .catch(function () {});
     });
   }
 
+  /* ── 초기화 ── */
   ensureKakaoMaps()
-    .then(function () {
-      return requestLocation();
-    })
-    .then(function (coords) {
-      return applyPosition(coords.lat, coords.lng);
-    })
+    .then(function () { return requestLocation(); })
+    .then(function (coords) { return applyPosition(coords.lat, coords.lng); })
     .catch(function () {
       if (window.kakao && window.kakao.maps) {
-        var seoul = {
-          lat: 37.5665,
-          lng: 126.978,
-        };
-
+        var seoul = { lat: 37.5665, lng: 126.978 };
         setStatus("위치를 알 수 없어 서울 시청 근처를 표시합니다.", true);
         applyPosition(seoul.lat, seoul.lng);
       }
