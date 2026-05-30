@@ -32,7 +32,7 @@
 <ul class="my-medicine-list" aria-label="복용 중인 약 목록">
   {% for medicine in medicines %}
   <li>
-    <a href="{% url 'medicine_detail' medicine.pk %}"
+    <a href="{% url 'medicine_edit' medicine.pk %}"
       class="medicine-list-card my-medicine-card {% if medicine.pk in ddi_warned_ids %}ddi-warned{% endif %}">
       <div class="medicine-thumb-wrap">
         {% if medicine.pk in ddi_warned_ids %}

@@ -20,7 +20,7 @@
       <header class="app-header">
         {% block header %}
         <a
-          href="{% block header_back_url %}{% url 'home' %}{% endblock %}"
+          href="{% block header_back_url %}{% if back_url %}{{ back_url }}{% else %}{% url 'home' %}{% endif %}{% endblock %}"
           class="header-back"
           aria-label="뒤로가기"
         >

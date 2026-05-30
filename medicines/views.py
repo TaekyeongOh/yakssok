@@ -152,7 +152,8 @@ def medicine_detail_view(request, pk):
     context = {
         'user': request.user,
         'medicine': medicine,
-        'nav_active': 'medicines',
+        'nav_active': 'reminder',
+        'back_url': reverse('medication_reminder'),
     }
     return render(request, 'medicines/medicine_detail.html', context)
 
